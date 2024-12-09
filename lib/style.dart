@@ -100,7 +100,7 @@ ButtonStyle AppButtonStyle() {
 
 TextStyle ButtonTextStyle() {
   return TextStyle(
-      color: Colors.white,
+      color: Colors.black,
       fontSize: 14,
       fontFamily: 'poppins',
       fontWeight: FontWeight.w400);
@@ -109,7 +109,7 @@ TextStyle ButtonTextStyle() {
 Ink SuccessButtonChild(String ButtonText) {
   return Ink(
     decoration: BoxDecoration(
-        color: colorGreen, borderRadius: BorderRadius.circular(6)),
+        color: colorLightGray, borderRadius: BorderRadius.circular(6)),
     child: Container(
       height: 45,
       alignment: Alignment.center,
