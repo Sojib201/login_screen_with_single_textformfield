@@ -13,6 +13,9 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+
+  String? emailErrorMessage;
+  String? passwordErrorMessage;
   final _formKey = GlobalKey<FormState>();
 
   TextEditingController emailController = TextEditingController();
@@ -29,10 +32,28 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  void _validateForm() {
-    if (_formKey.currentState != null) {
-      _formKey.currentState!.validate();
-    }
+  void _validateEmail(String value) {
+    setState(() {
+      if (value.isEmpty) {
+        emailErrorMessage = "Please enter your email";
+      } else if (!RegExp(r"^[^@]+@[^@]+\.[^@]+").hasMatch(value)) {
+        emailErrorMessage = "Invalid email address";
+      } else {
+        emailErrorMessage = null;
+      }
+    });
+  }
+
+  void _validatePassword(String value) {
+    setState(() {
+      if (value.isEmpty) {
+        passwordErrorMessage = "Please enter your password";
+      } else if (value.length < 6) {
+        passwordErrorMessage = "Password must be at least 6 characters";
+      } else {
+        passwordErrorMessage = null;
+      }
+    });
   }
 
   @override
@@ -66,32 +87,26 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 40,
                 ),
                 CustomTextFormField(
-                  onChanged: (value) {
-                    _validateForm();
-                  },
+                  onChanged: (value) => _validateEmail(value),
                   borderSideColor: Colors.grey,
                   label: 'Email',
                   hint: 'Email',
                   prefixIcon: Icons.email,
                   controller: emailController,
                   inputType: TextInputType.emailAddress,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Please enter your email";
-                    }
-                    if (!RegExp(r"^[^@]+@[^@]+\.[^@]+").hasMatch(value)) {
-                      return "Invalid email address";
-                    }
-                    return null;
-                  },
+                  validator: (_) => emailErrorMessage,
                 ),
-                SizedBox(
-                  height: 20,
-                ),
+                if (emailErrorMessage != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 5),
+                    child: Text(
+                      emailErrorMessage!,
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  ),
+                const SizedBox(height: 20),
                 CustomTextFormField(
-                  onChanged: (value) {
-                    _validateForm();
-                  },
+                  onChanged: (value) => _validatePassword(value),
                   borderSideColor: Colors.green,
                   label: 'Password',
                   hint: 'Password',
@@ -105,28 +120,22 @@ class _LoginScreenState extends State<LoginScreen> {
                           : Icons.visibility,
                     ),
                     onPressed: () {
-                      //_isPasswordVisible = !_isPasswordVisible;
-                      if (_isPasswordVisible) {
-                        _isPasswordVisible = false;
-                      } else {
-                        _isPasswordVisible = true;
-                      }
-                      setState(
-                        () {},
-                      );
+                      setState(() {
+                        _isPasswordVisible = !_isPasswordVisible;
+                      });
                     },
                   ),
                   isObsecureText: _isPasswordVisible,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Please enter your password";
-                    }
-                    if (value.length < 6) {
-                      return "Password must be at least 6 characters";
-                    }
-                    return null;
-                  },
+                  validator: (_) => passwordErrorMessage,
                 ),
+                if (passwordErrorMessage != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 5),
+                    child: Text(
+                      passwordErrorMessage!,
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  ),
                 SizedBox(
                   height: 10,
                 ),

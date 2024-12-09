@@ -40,6 +40,7 @@ class CustomTextFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      key: key,
       controller: controller,
       obscureText: isObsecureText!,
       keyboardType: inputType,
