@@ -380,8 +380,9 @@ class _LoginScreenState extends State<LoginScreen> {
 }
 
 class CustomTextFormField extends StatelessWidget {
+  final Color? focusColor;
   final double? borderRadiusCircular;
-  final Color borderSideColor;
+  final Color? borderSideColor;
   final Color? fillColor;
   final bool? filled;
   final String label;
@@ -411,8 +412,8 @@ class CustomTextFormField extends StatelessWidget {
     this.isObsecureText = false,
     this.fillColor,
     this.filled,
-    required this.borderSideColor,
-     this.borderRadiusCircular=20,
+     this.borderSideColor=Colors.grey,
+     this.borderRadiusCircular=20, this.focusColor=Colors.green,
   }) : super(key: key);
 
   @override
@@ -429,16 +430,16 @@ class CustomTextFormField extends StatelessWidget {
         filled: filled,
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(borderRadiusCircular!),
-          borderSide: BorderSide(color: borderSideColor),
+          borderSide: BorderSide(color: borderSideColor!),
         ),
-        focusColor: Colors.green,
+        focusColor: focusColor,
         suffixIcon: isPassword ? suffixIconButton : null,
         labelText: label,
         hintText: hint,
         prefixIcon: Icon(prefixIcon),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(20),
-          borderSide: BorderSide(color: borderSideColor),
+          borderRadius: BorderRadius.circular(borderRadiusCircular!),
+          borderSide: BorderSide(color: borderSideColor!),
         ),
       ),
     );
