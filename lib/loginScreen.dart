@@ -13,7 +13,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-
   String? emailErrorMessage;
   String? passwordErrorMessage;
   final _formKey = GlobalKey<FormState>();
@@ -23,37 +22,44 @@ class _LoginScreenState extends State<LoginScreen> {
 
   bool _isPasswordVisible = true;
 
+  // void _login() {
+  //   if (_formKey.currentState!.validate()) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(content: Text('Login successful!')),
+  //     );
+  //   }
+  // }
+
   void _login() {
-    if (_formKey.currentState!.validate()) {
-      // Perform login logic
+    bool isValid = _formKey.currentState!.validate();
+
+    if (isValid) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Login successful!')),
+        SnackBar(content: Text('Login successful!')),
       );
     }
   }
 
   void _validateEmail(String value) {
-    setState(() {
-      if (value.isEmpty) {
-        emailErrorMessage = "Please enter your email";
-      } else if (!RegExp(r"^[^@]+@[^@]+\.[^@]+").hasMatch(value)) {
-        emailErrorMessage = "Invalid email address";
-      } else {
-        emailErrorMessage = null;
-      }
-    });
+    if (value.isEmpty) {
+      emailErrorMessage = "Please enter your email";
+    } else if (!RegExp(r"^[^@]+@[^@]+\.[^@]+").hasMatch(value)) {
+      emailErrorMessage = "Invalid email address";
+    } else {
+      emailErrorMessage = null;
+    }
+    setState(() {});
   }
 
   void _validatePassword(String value) {
-    setState(() {
-      if (value.isEmpty) {
-        passwordErrorMessage = "Please enter your password";
-      } else if (value.length < 6) {
-        passwordErrorMessage = "Password must be at least 6 characters";
-      } else {
-        passwordErrorMessage = null;
-      }
-    });
+    if (value.isEmpty) {
+      passwordErrorMessage = "Please enter your password";
+    } else if (value.length < 6) {
+      passwordErrorMessage = "Password must be at least 6 characters";
+    } else {
+      passwordErrorMessage = null;
+    }
+    setState(() {});
   }
 
   @override
@@ -61,18 +67,21 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 80),
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 80),
           child: Form(
             key: _formKey,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                SizedBox(
+                  height: 20,
+                ),
                 Container(
                   child: Image.asset(
                     'assets/login.png',
                     color: colorLightGray,
-                    height: 100,
+                    height: 150,
                     width: 200,
                   ),
                 ),
@@ -86,27 +95,47 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(
                   height: 40,
                 ),
+                // CustomTextFormField(
+                //   onChanged: (value) => _validateEmail(value),
+                //   borderSideColor: Colors.grey,
+                //   label: 'Email',
+                //   hint: 'Email',
+                //   prefixIcon: Icons.email,
+                //   controller: emailController,
+                //   inputType: TextInputType.emailAddress,
+                //   validator: (_) => emailErrorMessage,
+                // ),
                 CustomTextFormField(
-                  onChanged: (value) => _validateEmail(value),
+                  onChanged: (value) {
+                    //_validateEmail(value);
+                    emailErrorMessage = value;
+                    _formKey.currentState?.validate();
+                  },
                   borderSideColor: Colors.grey,
                   label: 'Email',
                   hint: 'Email',
                   prefixIcon: Icons.email,
                   controller: emailController,
                   inputType: TextInputType.emailAddress,
-                  validator: (_) => emailErrorMessage,
+                  validator: (_) {
+                    _validateEmail(emailController.text);
+                    return emailErrorMessage;
+                  },
                 ),
-                if (emailErrorMessage != null)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 5),
-                    child: Text(
-                      emailErrorMessage!,
-                      style: TextStyle(color: Colors.red),
-                    ),
-                  ),
-                const SizedBox(height: 20),
+
+                // if (emailErrorMessage != null)
+                //   Text(
+                //     emailErrorMessage!,
+                //     style: TextStyle(color: Colors.red),
+                //   ),
+                SizedBox(height: 20),
+                //
                 CustomTextFormField(
-                  onChanged: (value) => _validatePassword(value),
+                  onChanged: (value) {
+                    //_validatePassword(value);
+                    passwordErrorMessage = value;
+                    _formKey.currentState?.validate();
+                  },
                   borderSideColor: Colors.green,
                   label: 'Password',
                   hint: 'Password',
@@ -126,16 +155,17 @@ class _LoginScreenState extends State<LoginScreen> {
                     },
                   ),
                   isObsecureText: _isPasswordVisible,
-                  validator: (_) => passwordErrorMessage,
+                  validator: (_) {
+                    _validatePassword(passwordController.text);
+                    return passwordErrorMessage;
+                  },
                 ),
-                if (passwordErrorMessage != null)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 5),
-                    child: Text(
-                      passwordErrorMessage!,
-                      style: TextStyle(color: Colors.red),
-                    ),
-                  ),
+
+                // if (passwordErrorMessage != null)
+                //   Text(
+                //     passwordErrorMessage!,
+                //     style: TextStyle(color: Colors.red),
+                //   ),
                 SizedBox(
                   height: 10,
                 ),
@@ -201,21 +231,21 @@ class _LoginScreenState extends State<LoginScreen> {
                         SizedBox(
                           height: 30,
                         ),
-                        InkWell(
-                          onTap: () {},
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "Don't have a account?",
-                                style: HeadText7(colorDarkBlue),
-                              ),
-                              Text(
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Don't have a account?",
+                              style: HeadText7(colorDarkBlue),
+                            ),
+                            InkWell(
+                              onTap: () {},
+                              child: Text(
                                 "Register",
                                 style: HeadText7(colorDarkBlue),
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         )
                       ],
                     )),

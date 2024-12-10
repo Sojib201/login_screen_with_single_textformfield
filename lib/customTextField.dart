@@ -34,7 +34,7 @@ class CustomTextFormField extends StatelessWidget {
     this.fillColor,
     this.filled,
     this.borderSideColor=Colors.grey,
-    this.borderRadiusCircular=20, this.focusColor=Colors.green,
+    this.borderRadiusCircular=12, this.focusColor=Colors.green,
   }) : super(key: key);
 
   @override
